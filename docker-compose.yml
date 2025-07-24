@@ -12,10 +12,6 @@ services:
     build: ./api
     ports:
       - "5000:5000"
-    volumes:
-      - model_volume:/model_data
-    # depends_on:
-    #   - trainer
 
   streamlit:
     build: ./streamlit
@@ -24,5 +20,6 @@ services:
     depends_on:
       - api
 
-volumes:
-  model_volume:
+
+# volumes:
+#   model_volume:

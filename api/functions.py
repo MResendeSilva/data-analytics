@@ -7,7 +7,6 @@ import pandas as pd
 
 
 
-
 class MinMax(BaseEstimator, TransformerMixin):
     def __init__(self, features_to_scale=['Age', 'Height']):
         self.features_to_scale = features_to_scale

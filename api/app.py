@@ -1,37 +1,38 @@
 from flask import Flask, request, jsonify, Response
 from pydantic import BaseModel, ValidationError
 import pickle
-from utilidades import MinMax, OneHotEncodeNames, OrdinalEncodeNames, BinarioTransformer, DropFeatures, Oversample
 import joblib
 import pandas as pd
+from functions import MinMax, OneHotEncodeNames, OrdinalEncodeNames, BinarioTransformer, DropFeatures, Oversample
 
 app = Flask(__name__)
+
 
 # Carregar o pipeline do modelo treinado
 # pipeline_path = '/model_data/pipeline.pkl'
 # with open(pipeline_path, 'rb') as f:
 #     pipeline = pickle.load(f)
 
-pipeline = joblib.load('model_data/pipeline.pkl')
-modelo = joblib.load('model_data/modelo.pkl')
+pipeline = joblib.load('pipeline.pkl')
+modelo = joblib.load('modelo.pkl')
 
-# Classe para validar as entradas
-class InputData(BaseModel):
-    Gender: str,
-    Age: int,
-    Height: float,
-    Weight: float,
-    family_history: str,
-    FAVC: str,
-    FCVC: str,
-    NCP: str,
-    CAEC: str,
-    SMOKE: str,
-    CH2O: str,
-    SCC: str,
-    FAF: str,
-    CALC: str,
-    MTRANS: str
+#Classe para validar as entradas
+# class InputData(BaseModel):
+#     Gender: str
+#     Age: int
+#     Height: float
+#     Weight: float
+#     family_history: str
+#     FAVC: str
+#     FCVC: str
+#     NCP: str
+#     CAEC: str
+#     SMOKE: str
+#     CH2O: str
+#     SCC: str
+#     FAF: str
+#     CALC: str
+#     MTRANS: str
 
 obesity_classes = {
     0: 'Abaixo_do_Peso',
@@ -46,24 +47,25 @@ obesity_classes = {
 @app.route('/predict', methods=['POST'])
 def predict():
     try:
-        input_data = InputData(**request.get_json())
+        #input_data = InputData(**request.get_json())
+        input_data = request.get_json()
 
         dados = {
-            'Gender': [input_data.Gender],
-            'Age': [input_data.Age],
-            'Height': [input_data.Height],
-            'Weight' : [input_data.Weight]
+            'Gender': [input_data.gender],
+            'Age': [input_data.age],
+            'Height': [input_data.height],
+            'Weight' : [input_data.weight],
             'family_history': [input_data.family_history],
-            'FAVC': [input_data.FAVC],
-            'FCVC': [input_data.FCVC],
-            'NCP': [input_data.NCP],
-            'CAEC': [input_data.CAEC],
-            'SMOKE': [input_data.SMOKE],
-            'CH2O': [input_data.CH2O],
-            'SCC': [input_data.SCC],
-            'FAF': [input_data.FAF],
-            'CALC': [input_data.CALC],
-            'MTRANS': [input_data.MTRANS],
+            'FAVC': [input_data.favc],
+            'FCVC': [input_data.fcvc],
+            'NCP': [input_data.ncp],
+            'CAEC': [input_data.caec],
+            'SMOKE': [input_data.smoke],
+            'CH2O': [input_data.ch20],
+            'SCC': [input_data.scc],
+            'FAF': [input_data.faf],
+            'CALC': [input_data.calc],
+            'MTRANS': [input_data.mtrans],
             'Obesity': ['Peso_Normal'] # Não alterar, parâmetro será deletado após passar pela pipeline
         }
 
