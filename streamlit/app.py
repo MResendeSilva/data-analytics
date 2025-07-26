@@ -48,7 +48,6 @@ if st.button("🔮 Prever"):
     try:
         response = requests.post("http://api:5000/predict", json=input_data)
         
-        logging.info(input_data)
 
         if response.status_code == 200:
             result = response.json()

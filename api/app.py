@@ -3,6 +3,7 @@ from pydantic import BaseModel, ValidationError
 import pickle
 import joblib
 import pandas as pd
+import logging
 from functions import MinMax, OneHotEncodeNames, OrdinalEncodeNames, BinarioTransformer, DropFeatures, Oversample
 
 app = Flask(__name__)
@@ -17,22 +18,22 @@ pipeline = joblib.load('pipeline.pkl')
 modelo = joblib.load('modelo.pkl')
 
 #Classe para validar as entradas
-# class InputData(BaseModel):
-#     Gender: str
-#     Age: int
-#     Height: float
-#     Weight: float
-#     family_history: str
-#     FAVC: str
-#     FCVC: str
-#     NCP: str
-#     CAEC: str
-#     SMOKE: str
-#     CH2O: str
-#     SCC: str
-#     FAF: str
-#     CALC: str
-#     MTRANS: str
+class InputData(BaseModel):
+    gender: str
+    age: int
+    height: float
+    weight: float
+    family_history: str
+    favc: str
+    fcvc: str
+    ncp: str
+    caec: str
+    smoke: str
+    ch20: str
+    scc: str
+    faf: str
+    calc: str
+    mtrans: str
 
 obesity_classes = {
     0: 'Abaixo_do_Peso',
@@ -47,8 +48,8 @@ obesity_classes = {
 @app.route('/predict', methods=['POST'])
 def predict():
     try:
-        #input_data = InputData(**request.get_json())
-        input_data = request.get_json()
+        input_data = InputData(**request.get_json())
+
 
         dados = {
             'Gender': [input_data.gender],
@@ -66,8 +67,9 @@ def predict():
             'FAF': [input_data.faf],
             'CALC': [input_data.calc],
             'MTRANS': [input_data.mtrans],
-            'Obesity': ['Peso_Normal'] # Não alterar, parâmetro será deletado após passar pela pipeline
+            'Obesity': ['Peso_Normal']
         }
+
 
         df_amostra = pd.DataFrame(dados)
         x_novo_dado = pipeline.transform(df_amostra)
