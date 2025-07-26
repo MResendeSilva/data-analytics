@@ -3,9 +3,78 @@ import pickle
 import joblib
 import pandas as pd
 import logging
-from functions import MinMax, OneHotEncodeNames, OrdinalEncodeNames, BinarioTransformer, DropFeatures, Oversample, predict_obesity
+from pydantic import BaseModel
+from functions import MinMax, OneHotEncodeNames, OrdinalEncodeNames, BinarioTransformer, DropFeatures, Oversample
 
+# ---------------- FUNÇÃO DE PREVISÃO ---------------- #
 
+def predict_obesity(data):
+    pipeline = joblib.load('pipeline.pkl')
+    modelo = joblib.load('modelo.pkl')
+
+    # Classe de validação de dados
+    class InputData(BaseModel):
+        gender: str
+        age: int
+        height: float
+        weight: float
+        family_history: str
+        favc: str
+        fcvc: str
+        ncp: str
+        caec: str
+        smoke: str
+        ch20: str
+        scc: str
+        faf: str
+        calc: str
+        mtrans: str
+
+    input_data = InputData(**data)
+
+    dados = {
+        'Gender': [input_data.gender],
+        'Age': [input_data.age],
+        'Height': [input_data.height],
+        'Weight': [input_data.weight],
+        'family_history': [input_data.family_history],
+        'FAVC': [input_data.favc],
+        'FCVC': [input_data.fcvc],
+        'NCP': [input_data.ncp],
+        'CAEC': [input_data.caec],
+        'SMOKE': [input_data.smoke],
+        'CH2O': [input_data.ch20],
+        'SCC': [input_data.scc],
+        'FAF': [input_data.faf],
+        'CALC': [input_data.calc],
+        'MTRANS': [input_data.mtrans],
+        'Obesity': ['Peso_Normal']  # dummy target para manter a estrutura do pipeline
+    }
+
+    df_amostra = pd.DataFrame(dados)
+
+    # Transformação com pipeline
+    x_novo_dado = pipeline.transform(df_amostra)
+
+    if 'Obesity' in x_novo_dado.columns:
+        x_transformado = x_novo_dado.drop(columns=['Obesity']).head()
+    else:
+        x_transformado = x_novo_dado.head()
+
+    y_predito = modelo.predict(x_transformado)
+    y_predito = y_predito[0]
+
+    # Interpretação do resultado
+    if y_predito == 0:
+        return 'Risco de ficar abaixo do peso'
+    elif y_predito in [1, 2, 3]:
+        return 'Sem riscos'
+    elif y_predito in [4, 5, 6]:
+        return 'Risco de desenvolver obesidade se continuar com esses hábitos'
+    else:
+        return "Erro na previsão"
+
+# ---------------- INTERFACE STREAMLIT ---------------- #
 
 st.set_page_config(page_title="Formulário de Previsão", layout="centered")
 st.title("📋 Formulário de Previsão")
@@ -31,28 +100,23 @@ weight = st.number_input("Peso (em kg)", min_value=10.0, max_value=300.0, value=
 
 # Botão para enviar
 if st.button("🔮 Prever"):
+    input_dict = {
+        "gender": gender,
+        "age": age,
+        "height": height,
+        "weight": weight,
+        "family_history": family_history,
+        "favc": favc,
+        "fcvc": fcvc,
+        "ncp": ncp,
+        "caec": caec,
+        "smoke": smoke,
+        "ch20": ch20,
+        "scc": scc,
+        "faf": faf,
+        "calc": calc,
+        "mtrans": mtrans
+    }
 
-    response = predict_obesity(
-        input_data = {
-            "gender": gender,
-            "age": age,
-            "height": height,
-            "weight": weight,
-            "family_history": family_history,
-            "favc": favc,
-            "fcvc": fcvc,
-            "ncp": ncp,
-            "caec": caec,
-            "smoke": smoke,
-            "ch20": ch20,
-            "scc": scc,
-            "faf": faf,
-            "calc": calc,
-            "mtrans": mtrans
-        }
-    )
-
+    response = predict_obesity(input_dict)
     st.success(f"Resultado da Previsão: **{response}**")
-
-
-
