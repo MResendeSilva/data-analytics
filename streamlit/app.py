@@ -52,7 +52,7 @@ if st.button("🔮 Prever"):
         }
     )
 
-    st.success(f"Resultado da Previsão: **{}**")
+    st.success(f"Resultado da Previsão: **{response}**")
 
 
 def predict(data):
