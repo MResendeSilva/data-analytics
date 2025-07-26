@@ -32,7 +32,7 @@ weight = st.number_input("Peso (em kg)", min_value=10.0, max_value=300.0, value=
 # Botão para enviar
 if st.button("🔮 Prever"):
 
-    response = predict(
+    response = predict_obesity(
         input_data = {
             "gender": gender,
             "age": age,
