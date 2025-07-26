@@ -3,16 +3,21 @@ import pickle
 import joblib
 import pandas as pd
 import logging
+import os
 from pydantic import BaseModel
 from functions import MinMax, OneHotEncodeNames, OrdinalEncodeNames, BinarioTransformer, DropFeatures, Oversample
 
 # ---------------- FUNÇÃO DE PREVISÃO ---------------- #
 
 def predict_obesity(data):
-    pipeline = joblib.load('pipeline.pkl')
-    modelo = joblib.load('modelo.pkl')
+    # Garante que os caminhos sejam relativos ao script
+    base_path = os.path.dirname(__file__)
+    pipeline_path = os.path.join(base_path, "pipeline.pkl")
+    modelo_path = os.path.join(base_path, "modelo.pkl")
 
-    # Classe de validação de dados
+    pipeline = joblib.load(pipeline_path)
+    modelo = joblib.load(modelo_path)
+
     class InputData(BaseModel):
         gender: str
         age: int
@@ -48,7 +53,7 @@ def predict_obesity(data):
         'FAF': [input_data.faf],
         'CALC': [input_data.calc],
         'MTRANS': [input_data.mtrans],
-        'Obesity': ['Peso_Normal']  # dummy target para manter a estrutura do pipeline
+        'Obesity': ['Peso_Normal']  # dummy target
     }
 
     df_amostra = pd.DataFrame(dados)
@@ -64,7 +69,6 @@ def predict_obesity(data):
     y_predito = modelo.predict(x_transformado)
     y_predito = y_predito[0]
 
-    # Interpretação do resultado
     if y_predito == 0:
         return 'Risco de ficar abaixo do peso'
     elif y_predito in [1, 2, 3]:
