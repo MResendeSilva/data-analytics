@@ -1,17 +1,12 @@
 version: '3.9'
 
 services:
-  # trainer:
-  #   build: ./train
-  #   volumes:
-  #     - model_volume:/model_data
-  #   command: ["python", "train.py"]
-  #   restart: "no"
-
   api:
     build: ./api
     ports:
       - "5000:5000"
+    networks:
+      - app-network
 
   streamlit:
     build: ./streamlit
@@ -19,7 +14,10 @@ services:
       - "8501:8501"
     depends_on:
       - api
+    networks:
+      - app-network
 
-
+networks:
+  app-network:
 # volumes:
 #   model_volume:

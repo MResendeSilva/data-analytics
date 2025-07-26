@@ -21,6 +21,7 @@
   "postAttachCommand": {
     "server": "streamlit run streamlit/app.py --server.enableCORS false --server.enableXsrfProtection false"
   },
+  
   "portsAttributes": {
     "8501": {
       "label": "Application",
