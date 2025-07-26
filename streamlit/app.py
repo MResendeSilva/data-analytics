@@ -31,26 +31,28 @@ weight = st.number_input("Peso (em kg)", min_value=10.0, max_value=300.0, value=
 
 # Botão para enviar
 if st.button("🔮 Prever"):
-    input_data = {
-        "gender": gender,
-        "age": age,
-        "height": height,
-        "weight": weight,
-        "family_history": family_history,
-        "favc": favc,
-        "fcvc": fcvc,
-        "ncp": ncp,
-        "caec": caec,
-        "smoke": smoke,
-        "ch20": ch20,
-        "scc": scc,
-        "faf": faf,
-        "calc": calc,
-        "mtrans": mtrans
-    }
 
-    
-    st.success(f"Resultado da Previsão: **{result['data']['prediction']}**")
+    response = predict(
+        input_data = {
+            "gender": gender,
+            "age": age,
+            "height": height,
+            "weight": weight,
+            "family_history": family_history,
+            "favc": favc,
+            "fcvc": fcvc,
+            "ncp": ncp,
+            "caec": caec,
+            "smoke": smoke,
+            "ch20": ch20,
+            "scc": scc,
+            "faf": faf,
+            "calc": calc,
+            "mtrans": mtrans
+        }
+    )
+
+    st.success(f"Resultado da Previsão: **{}**")
 
 
 def predict(data):
