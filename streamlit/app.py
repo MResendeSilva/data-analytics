@@ -70,18 +70,20 @@ def predict_obesity(data):
     y_predito = y_predito[0]
 
     if y_predito == 0:
-        return 'Risco de ficar abaixo do peso'
-    elif y_predito in [1, 2, 3]:
-        return 'Sem riscos'
-    elif y_predito in [4, 5, 6]:
-        return 'Risco de desenvolver obesidade se continuar com esses hábitos'
+        prediction = 'Risco de ficar abaixo do peso'
+    elif y_predito in [1,2,3]:
+        prediction = 'Sem riscos'
+    elif y_predito in [4,5,6]:
+        prediction = 'Risco de desenvolver obesidade se continuar com esses hábitos'
     else:
         return "Erro na previsão"
 
 # ---------------- INTERFACE STREAMLIT ---------------- #
-
+url = "https://app.powerbi.com/view?r=eyJrIjoiZTZjMmQ3NWEtY2IwZC00M2QyLWI0OGItMTczMTk0NTc2ZGNjIiwidCI6Ijg5NmI3ZjkyLTgyZDItNDc3Ny1hYTQwLThiNjEyZWY2MWJmNCJ9"
 st.set_page_config(page_title="Formulário de Previsão", layout="centered")
 st.title("📋 Formulário de Previsão")
+st.write("📈 Visão analítica [link](%s)" % url)
+
 
 # Campos categóricos
 gender = st.selectbox("Gênero", options=["Feminino", "Masculino"])
