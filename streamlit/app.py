@@ -79,12 +79,12 @@ def predict_obesity(data):
         return "Erro na previsão"
 
 # ---------------- INTERFACE STREAMLIT ---------------- #
-#url = "https://app.powerbi.com/view?r=eyJrIjoiZTZjMmQ3NWEtY2IwZC00M2QyLWI0OGItMTczMTk0NTc2ZGNjIiwidCI6Ijg5NmI3ZjkyLTgyZDItNDc3Ny1hYTQwLThiNjEyZWY2MWJmNCJ9"
-#git_hub = "https://github.com/MResendeSilva/data-analytics"
+url = "https://app.powerbi.com/view?r=eyJrIjoiZTZjMmQ3NWEtY2IwZC00M2QyLWI0OGItMTczMTk0NTc2ZGNjIiwidCI6Ijg5NmI3ZjkyLTgyZDItNDc3Ny1hYTQwLThiNjEyZWY2MWJmNCJ9"
+git_hub = "https://github.com/MResendeSilva/data-analytics"
 st.set_page_config(page_title="Formulário de Previsão", layout="centered")
 st.title("📋 Formulário de Previsão")
-#st.write("📈 Visão analítica [link](%s)" % url)
-#st.write("Repositório [link](%s)" % git_hub)
+st.write("📈 Visão analítica [link](%s)" % url)
+st.write("Repositório [link](%s)" % git_hub)
 
 # Campos categóricos
 gender = st.selectbox("Gênero", options=["Feminino", "Masculino"])
