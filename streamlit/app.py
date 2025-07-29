@@ -74,7 +74,7 @@ def predict_obesity(data):
     elif y_predito in [1, 2, 3]:
         return 'Sem riscos'
     elif y_predito in [4, 5, 6]:
-        return = 'Risco de desenvolver obesidade se continuar com esses hábitos'
+        return 'Risco de desenvolver obesidade se continuar com esses hábitos'
     else:
         return "Erro na previsão"
 
